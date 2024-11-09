@@ -70,11 +70,29 @@ public class CustomerDAOImpl implements DAO<Customer, String> {
     @Override
     public void insertData(Customer o) {
        String sql = "INSERT INTO Customer VALUES (?,?,?,?,?,?)";
+       Object[] values ={
+           o.getIdCustomer(),
+           o.getCustomerName(),
+           o.getPoint(),
+           o.getPhone(),
+           o.isStatus(),
+           o.getDescription()
+       };
+       Jdbc.executeUpdate(sql, values);
     }
 
     @Override
     public void updateData(Customer o) {
-     
+     String sql = "UPDATE Customer SET idCustomer=?, customerName=?, point=?, status=?, description=?";
+     Object[] values = {
+         o.getIdCustomer(),
+         o.getCustomerName(),
+         o.getPoint(),
+         o.getPhone(),
+         o.isStatus(),
+         o.getDescription()
+     };
+     Jdbc.executeUpdate(sql, values);
     }
 
     @Override
