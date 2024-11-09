@@ -46,7 +46,25 @@ public class CustomerDAOImpl implements DAO<Customer, String> {
 
     @Override
     public Customer getDataById(String ma) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Customer cust = new Customer();
+        
+        String sql = "SELECT * FROM Customer WHERE =?";
+        Object[] values = {ma};
+        
+        ResultSet rs = Jdbc.executeQuery(sql, values);
+        try {
+            while (rs.next()) {
+                cust.setIdCustomer(rs.getString("idCustomer"));
+                cust.setCustomerName(rs.getString("customerName"));
+                cust.setPoint(rs.getInt("point"));
+                cust.setPhone(rs.getString("phone"));
+                cust.setStatus(rs.getBoolean("status"));
+                cust.setDescription(rs.getString("description"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return  cust;
     }
 
     @Override
@@ -61,7 +79,9 @@ public class CustomerDAOImpl implements DAO<Customer, String> {
 
     @Override
     public void deleteById(String ma) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql ="DELETE FROM Customer WHERE idCustomer =?";
+        Object[] values = {ma};
+        Jdbc.executeUpdate(sql, values);
     }
     
 }
