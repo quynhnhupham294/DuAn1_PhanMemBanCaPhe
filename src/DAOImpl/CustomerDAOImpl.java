@@ -69,12 +69,12 @@ public class CustomerDAOImpl implements DAO<Customer, String> {
 
     @Override
     public void insertData(Customer o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       String sql = "INSERT INTO Customer VALUES (?,?,?,?,?,?)";
     }
 
     @Override
     public void updateData(Customer o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+     
     }
 
     @Override
