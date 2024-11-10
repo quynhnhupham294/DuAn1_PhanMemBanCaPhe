@@ -1,10 +1,12 @@
 package GUI;
 
+import DAOImpl.UserDAOImpl;
+import Entity.User;
 import javax.swing.JOptionPane;
 
 
 public class Login extends javax.swing.JFrame {
-   
+   private UserDAOImpl userDAO = new UserDAOImpl();
 
     public Login() {
         initComponents();
@@ -182,16 +184,39 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
-        if(txtUserName.getText().equals("")) {
+
+        String username = txtUserName.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+        if (username.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập User name");
-        } else if (txtPassword.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập Password");
-        } else if (txtUserName.getText().contains("Quynh") && txtPassword.getText().contains("123")){
-            JOptionPane.showMessageDialog(null, "Đăng nhập thành công!");
-        } else {
-            JOptionPane.showMessageDialog(null, "UserName hoặc Password sai!", "Message", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập Password");
+            return;
+        }
+        User user = userDAO.getDataById(username);
+        if (user == null) { 
+            JOptionPane.showMessageDialog(null, "UserName không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+         if (!user.getPassword().equals(password)) {
+            JOptionPane.showMessageDialog(null, "Password không chính xác!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+         JOptionPane.showMessageDialog(null, "Đăng nhập thành công!");
+
+        // Phân quyền
+        if (user.isIdRole()) {
+            // Mở giao diện admin 
+            // new AdminForm().setVisible(true);
+            System.out.println("Xin chào Admin");
+        } else {
+            // Mở giao diện nhân viên
+            // new UserForm().setVisible(true);
+            System.out.println("Xin chào Nhân viên");
+        }
+        this.dispose();
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void cbxShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxShowPasswordActionPerformed
