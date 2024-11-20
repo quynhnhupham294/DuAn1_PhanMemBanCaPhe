@@ -83,22 +83,24 @@ public class CustomerDAOImpl implements DAO<Customer, String> {
 
     @Override
     public void updateData(Customer o) {
-     String sql = "UPDATE Customer SET idCustomer=?, customerName=?, point=?, status=?, description=?";
+     String sql = "UPDATE Customer SET customerName=?, point=?,phone=? , status=?, description=? WHERE idCustomer=?";
      Object[] values = {
-         o.getIdCustomer(),
          o.getCustomerName(),
          o.getPoint(),
          o.getPhone(),
          o.isStatus(),
-         o.getDescription()
+         o.getDescription(),
+         o.getIdCustomer(),
      };
      Jdbc.executeUpdate(sql, values);
     }
 
     @Override
     public void deleteById(String ma) {
-        String sql ="DELETE FROM Customer WHERE idCustomer =?";
-        Object[] values = {ma};
+    String sql ="UPDATE [Order] SET idCustomer = NULL WHERE idCustomer = ? " +
+                "UPDATE OrderDetail SET idOrder = NULL WHERE idOrder IN (SELECT idOrder FROM [Order] WHERE idCustomer = ?)\n" +
+                 "DELETE FROM Customer WHERE idCustomer = ?";
+        Object[] values = {ma, ma, ma};
         Jdbc.executeUpdate(sql, values);
     }
 
@@ -106,5 +108,6 @@ public class CustomerDAOImpl implements DAO<Customer, String> {
     public ArrayList<String> SelectBySql(String sql, Object... args) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
 }
+
+

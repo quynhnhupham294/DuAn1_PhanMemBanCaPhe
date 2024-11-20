@@ -619,34 +619,34 @@ public class QuanLyNhanVien extends javax.swing.JFrame implements NaviController
     
     // Update status: Phân chia quyền cho các chức năng
     public void updateStatus() {
-        boolean edit = (row>= 0);
-        boolean first = (row == 0);
-        boolean last = (row == tblQuanLyNhanVien.getRowCount() - 1);
-        
-        if (Auth.isManager()) {
-            txtMaNV.setEnabled(!edit);
-            btnThem.setEnabled(!edit);
-            btnSua.setEnabled(edit);
-            btnXoa.setEnabled(edit);
-        } else {
-            txtMaNV.setEnabled(false);
-            txtTenNV.setEnabled(false);
-            txtMatKhau.setEnabled(false);
-            txtXacNhanMatKhau.setEnabled(false);
-            txtSDT.setEnabled(false);
-            txtDiaChi.setEnabled(false);
-            txtGhiChu.setEnabled(false);
-            rboAdmin.setEnabled(false);
-            rboManager.setEnabled(false);
-            
-            btnThem.setEnabled(false);
-            btnSua.setEnabled(false);
-            btnXoa.setEnabled(false);
-        }
-        
-        btnFirst.setEnabled(edit && !first);
-        btnPrevious.setEnabled(edit && !first);
-        btnNext.setEnabled(edit && !first);
-        btnLast.setEnabled(edit && !first);
+//        boolean edit = (row>= 0);
+//        boolean first = (row == 0);
+//        boolean last = (row == tblQuanLyNhanVien.getRowCount() - 1);
+//        
+//        if (Auth.isManager()) {
+//            txtMaNV.setEnabled(!edit);
+//            btnThem.setEnabled(!edit);
+//            btnSua.setEnabled(edit);
+//            btnXoa.setEnabled(edit);
+//        } else {
+//            txtMaNV.setEnabled(false);
+//            txtTenNV.setEnabled(false);
+//            txtMatKhau.setEnabled(false);
+//            txtXacNhanMatKhau.setEnabled(false);
+//            txtSDT.setEnabled(false);
+//            txtDiaChi.setEnabled(false);
+//            txtGhiChu.setEnabled(false);
+//            rboAdmin.setEnabled(false);
+//            rboManager.setEnabled(false);
+//            
+//            btnThem.setEnabled(false);
+//            btnSua.setEnabled(false);
+//            btnXoa.setEnabled(false);
+//        }
+//        
+//        btnFirst.setEnabled(edit && !first);
+//        btnPrevious.setEnabled(edit && !first);
+//        btnNext.setEnabled(edit && !first);
+//        btnLast.setEnabled(edit && !first);
     }
 }
