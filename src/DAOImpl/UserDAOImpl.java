@@ -29,6 +29,7 @@ public class UserDAOImpl implements DAO<User, String> {
                         rs.getString("phone"),
                         rs.getString("address"),
                         rs.getString("description"),
+                        rs.getString("email"),
                         rs.getBoolean("idRole") // Quyền hạn (Admin/Staff)
                 ));
             }
@@ -55,12 +56,14 @@ public class UserDAOImpl implements DAO<User, String> {
                         rs.getString("phone"),
                         rs.getString("address"),
                         rs.getString("description"),
+                        rs.getString("email"),
                         rs.getBoolean("idRole")
                 );
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        System.out.println(user.getPassword());
         return user; // Trả về null nếu không tìm thấy
     }
 
@@ -99,10 +102,5 @@ public class UserDAOImpl implements DAO<User, String> {
         String sql = "DELETE FROM [User] WHERE idUser = ?";
         Object[] values = {idUser};
         Jdbc.executeUpdate(sql, values);
-    }
-
-    @Override
-    public ArrayList<String> SelectBySql(String sql, Object... args) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
