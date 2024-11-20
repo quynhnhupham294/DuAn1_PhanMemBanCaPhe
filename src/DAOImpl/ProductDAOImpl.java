@@ -96,9 +96,4 @@ public class ProductDAOImpl implements DAO<Product, String> {
         Object[] values = {idProduct};
         Jdbc.executeUpdate(sql, values);
     }
-
-    @Override
-    public ArrayList<String> SelectBySql(String sql, Object... args) {
-        throw new UnsupportedOperationException("Not supported yet");
-    }
 }

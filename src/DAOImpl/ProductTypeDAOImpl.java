@@ -19,15 +19,6 @@ import Entity.ProductType;
  *
  * @author Shreck
  */
-public class ProductTypeDAOImpl {
-     public List<ProductType> getAllData() {
-       List<ProductType> list = new ArrayList<>();
-       
-       String sql = "Select * from ProductType";
-       Object[] values = {};
-       
-       ResultSet rs = Jdbc.executeQuery(sql, values);
-
 public class ProductTypeDAOImpl implements DAO<ProductType, String> {
 
     @Override
@@ -101,10 +92,5 @@ public class ProductTypeDAOImpl implements DAO<ProductType, String> {
         String sql = "DELETE FROM [ProductType] WHERE idProductType = ?";
         Object[] values = {idProductType};
         Jdbc.executeUpdate(sql, values);
-    }
-
-    @Override
-    public ArrayList<String> SelectBySql(String sql, Object... args) {
-        throw new UnsupportedOperationException("Not supported yet");
     }
 }
