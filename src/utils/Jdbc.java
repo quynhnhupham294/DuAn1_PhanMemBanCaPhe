@@ -97,13 +97,17 @@ public class Jdbc {
      * @param values các giá trị thay thế vào ?
      * @return giá trị truy vấn được
      */
-    public static <T> T getValue(String sql, Object... values) {
-        ResultSet rs = Jdbc.executeQuery(sql, values);
+    public static Object Values(String sql, Object... args) {
         try {
-            rs.next();
-            return (T) rs.getObject(1);
+            ResultSet rs = executeQuery(sql, args);
+            if (rs.next()) {
+                return rs.getObject(1);
+            }
+            rs.getStatement().getConnection().close();
+            return null;
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            ex.printStackTrace();
         }
+        return null;
     }
 }
