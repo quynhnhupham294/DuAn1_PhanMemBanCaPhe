@@ -48,7 +48,7 @@ public class UserDAOImpl implements DAO<User, String> {
         
         ResultSet rs = Jdbc.executeQuery(sql, values);
         try {
-            if (rs.next()) { // Chỉ cần một bản ghi
+            if (rs.next()) {
                 user = new User(
                         rs.getString("idUser"),
                         rs.getString("userName"),
@@ -77,7 +77,7 @@ public class UserDAOImpl implements DAO<User, String> {
             user.getPhone(),
             user.getAddress(),
             user.getDescription(),
-            user.isIdRole() // Quyền hạn
+            user.isIdRole()
         };
         Jdbc.executeUpdate(sql, values);
     }
