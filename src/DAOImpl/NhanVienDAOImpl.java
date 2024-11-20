@@ -11,9 +11,9 @@ import utils.Jdbc;
 public class NhanVienDAOImpl implements NhanVienDAO{ 
     String sqlSelectAll = "SELECT * FROM [User]"; // find
     String sqlSelectID = "SELECT * FROM [User] WHERE idUser = ?"; // findById
-    String sqlInsert = "INSERT INTO [User](idUser, userName, password, phone, address, description, idRole) "
+    String sqlInsert = "INSERT INTO [User](idUser, userName, password, phone, address, description, email, idRole)"
                      + "VALUES(?, ?, ?, ?, ?, ?, ?)";
-    String sqlUpdate = "UPDATE [User] SET userName = ?, password = ?, phone = ?, address = ?, description = ?, idRole = ? WHERE idUser = ?";
+    String sqlUpdate = "UPDATE [User] SET userName = ?, password = ?, phone = ?, address = ?, description = ?, email = ?, idRole = ? WHERE idUser = ?";
     String sqlDelete = "DELETE FROM [User] WHERE idUser = ?";
     
     @Override
@@ -29,6 +29,7 @@ public class NhanVienDAOImpl implements NhanVienDAO{
                 nv.setPhone(rs.getString("phone"));
                 nv.setAddress(rs.getString("address"));
                 nv.setDescription(rs.getString("description"));
+                nv.setEmail(rs.getString("email"));
                 nv.setIdRole(rs.getBoolean("idRole"));
                 list.add(nv);
             }
@@ -59,6 +60,7 @@ public class NhanVienDAOImpl implements NhanVienDAO{
             entity.getPhone(),
             entity.getAddress(),
             entity.getDescription(), 
+            entity.getEmail(),
             entity.isIdRole()? 1 : 0);
         return entity;
     }
@@ -71,6 +73,7 @@ public class NhanVienDAOImpl implements NhanVienDAO{
             entity.getPhone(),
             entity.getAddress(),
             entity.getDescription(), 
+            entity.getEmail(),
             entity.isIdRole()? 1 : 0,
             entity.getIdUser());
         return entity;
@@ -80,4 +83,9 @@ public class NhanVienDAOImpl implements NhanVienDAO{
     public void deleteById(String id) {
         Jdbc.executeUpdate(sqlDelete, id);
     }
+    
+//    @Override
+//    public List<User> findAllFormQLTK() {
+//        return find(sqlSelectAll);
+//    }
 }
