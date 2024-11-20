@@ -103,11 +103,6 @@ public class CustomerDAOImpl implements DAO<Customer, String> {
         Object[] values = {ma, ma, ma};
         Jdbc.executeUpdate(sql, values);
     }
-
-    @Override
-    public ArrayList<String> SelectBySql(String sql, Object... args) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
 
 
