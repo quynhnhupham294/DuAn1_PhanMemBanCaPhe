@@ -7,18 +7,20 @@ public class User {
     private String phone;
     private String address;
     private String description;
+    private String email;
     private boolean idRole;
 
     public User() {
     }
 
-    public User(String idUser, String userName, String password, String phone, String address, String description, boolean idRole) {
+    public User(String idUser, String userName, String password, String phone, String address, String description, String email, boolean idRole) {
         this.idUser = idUser;
         this.userName = userName;
         this.password = password;
         this.phone = phone;
         this.address = address;
         this.description = description;
+        this.email = email;
         this.idRole = idRole;
     }
 
@@ -68,6 +70,14 @@ public class User {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public boolean isIdRole() {

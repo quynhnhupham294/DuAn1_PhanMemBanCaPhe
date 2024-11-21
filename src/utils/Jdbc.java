@@ -9,9 +9,10 @@ import java.sql.SQLException;
 public class Jdbc {
 
     private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    private static final String DB_URL = "jdbc:sqlserver://localhost;database=phanmembanhang;encrypt=true;trustServerCertificate=true;";
-    private static final String USERNAME = "sa";
-    private static final String PASSWORD = "123456";
+    private static final String DB_URL = "jdbc:sqlserver://localhost;database=phanMemBanCaPhe;encrypt=true;trustServerCertificate=true;";
+    private static final String USERNAME = "DuAn1";
+    private static final String PASSWORD = "123";
+
     private static Connection connection;
 
     static {
@@ -96,13 +97,17 @@ public class Jdbc {
      * @param values các giá trị thay thế vào ?
      * @return giá trị truy vấn được
      */
-    public static <T> T getValue(String sql, Object... values) {
-        ResultSet rs = Jdbc.executeQuery(sql, values);
+    public static Object Values(String sql, Object... args) {
         try {
-            rs.next();
-            return (T) rs.getObject(1);
+            ResultSet rs = executeQuery(sql, args);
+            if (rs.next()) {
+                return rs.getObject(1);
+            }
+            rs.getStatement().getConnection().close();
+            return null;
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            ex.printStackTrace();
         }
+        return null;
     }
 }

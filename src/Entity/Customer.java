@@ -68,6 +68,10 @@ public class Customer {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Customer{" + "idCustomer=" + idCustomer + ", customerName=" + customerName + ", point=" + point + ", phone=" + phone + ", status=" + status + ", description=" + description + '}';
+    }
     
 }

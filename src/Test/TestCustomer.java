@@ -26,6 +26,9 @@ public class TestCustomer {
             System.out.println(o.getDescription());
         }
         
+        for (Customer customer : list) {
+            System.out.println(customer.toString());
+        }
     }
     
 }

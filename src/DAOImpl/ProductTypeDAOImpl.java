@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DAOImpl;
 
 import DAO.DAO;
@@ -9,16 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import utils.Jdbc;
+import Entity.ProductType;
+/**
+ *
+ * @author Shreck
+ */
 public class ProductTypeDAOImpl implements DAO<ProductType, String> {
 
     @Override
     public List<ProductType> getAllData() {
         List<ProductType> list = new ArrayList<>();
-        
+
         String sql = "SELECT * FROM [ProductType]";
         Object[] values = {};
-        
+
         ResultSet rs = Jdbc.executeQuery(sql, values);
         try {
             while (rs.next()) {
@@ -37,10 +46,10 @@ public class ProductTypeDAOImpl implements DAO<ProductType, String> {
     @Override
     public ProductType getDataById(String idProductType) {
         ProductType productType = null;
-        
+
         String sql = "SELECT * FROM [ProductType] WHERE idProductType = ?";
         Object[] values = {idProductType};
-        
+
         ResultSet rs = Jdbc.executeQuery(sql, values);
         try {
             if (rs.next()) {
@@ -83,10 +92,5 @@ public class ProductTypeDAOImpl implements DAO<ProductType, String> {
         String sql = "DELETE FROM [ProductType] WHERE idProductType = ?";
         Object[] values = {idProductType};
         Jdbc.executeUpdate(sql, values);
-    }
-
-    @Override
-    public ArrayList<String> SelectBySql(String sql, Object... args) {
-        throw new UnsupportedOperationException("Not supported yet");
     }
 }
