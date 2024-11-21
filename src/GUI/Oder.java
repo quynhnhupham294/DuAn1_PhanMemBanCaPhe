@@ -39,7 +39,7 @@ public class Oder extends javax.swing.JFrame {
     ProductDAOImpl dao =new ProductDAOImpl();
     private List<OrderItem> orderItems = new ArrayList<>();
     /**
-     * Creates new form Oder
+     * 
      */
     public Oder() {
         initComponents();
