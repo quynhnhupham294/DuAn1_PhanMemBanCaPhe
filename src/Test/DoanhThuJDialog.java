@@ -20,10 +20,10 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import org.apache.poi.sl.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+//import org.apache.poi.sl.usermodel.Sheet;
+//import org.apache.poi.ss.usermodel.Row;
+//import org.apache.poi.ss.usermodel.Workbook;
+//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * 
@@ -308,7 +308,7 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxNamActionPerformed
 
     private void btnImportExelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportExelActionPerformed
-        exportToExcel();
+//        exportToExcel();
     }//GEN-LAST:event_btnImportExelActionPerformed
 
     /**
@@ -362,37 +362,37 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 
-   public void exportToExcel() {
-    try {
-        JFileChooser fileChooser = new JFileChooser();
-        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            Workbook workbook = new XSSFWorkbook();
-            org.apache.poi.ss.usermodel.Sheet sheet = workbook.createSheet("Doanh thu");
-
-            
-            DefaultTableModel model = (DefaultTableModel) tblDoanhThu.getModel();
-            Row headerRow = sheet.createRow(0);
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                headerRow.createCell(i).setCellValue(model.getColumnName(i));
-            }
-
-            
-            for (int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
-                Row row = sheet.createRow(rowIndex + 1);
-                for (int colIndex = 0; colIndex < model.getColumnCount(); colIndex++) {
-                    row.createCell(colIndex).setCellValue(model.getValueAt(rowIndex, colIndex).toString());
-                }
-            }
-
-            try (FileOutputStream out = new FileOutputStream(file)) {
-                workbook.write(out);
-            }
-
-            JOptionPane.showMessageDialog(this, "");
-        }
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-    }
-}
+//   public void exportToExcel() {
+//    try {
+//        JFileChooser fileChooser = new JFileChooser();
+//        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+//            File file = fileChooser.getSelectedFile();
+//            Workbook workbook = new XSSFWorkbook();
+//            org.apache.poi.ss.usermodel.Sheet sheet = workbook.createSheet("Doanh thu");
+//
+//            
+//            DefaultTableModel model = (DefaultTableModel) tblDoanhThu.getModel();
+//            Row headerRow = sheet.createRow(0);
+//            for (int i = 0; i < model.getColumnCount(); i++) {
+//                headerRow.createCell(i).setCellValue(model.getColumnName(i));
+//            }
+//
+//            
+//            for (int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
+//                Row row = sheet.createRow(rowIndex + 1);
+//                for (int colIndex = 0; colIndex < model.getColumnCount(); colIndex++) {
+//                    row.createCell(colIndex).setCellValue(model.getValueAt(rowIndex, colIndex).toString());
+//                }
+//            }
+//
+//            try (FileOutputStream out = new FileOutputStream(file)) {
+//                workbook.write(out);
+//            }
+//
+//            JOptionPane.showMessageDialog(this, "");
+//        }
+//    } catch (Exception ex) {
+//        JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+//    }
+//}
 }

@@ -31,6 +31,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import java.io.FileOutputStream;
+
 /**
  *
  * @author vuthe
@@ -175,35 +189,35 @@ public class Oder extends javax.swing.JFrame {
         }
     }
 
-   private void addProductToPanel(Product product, JPanel panel) {// set sản phẩm vào jpanel
-    JPanel productPanel = new JPanel();
-    productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
+    private void addProductToPanel(Product product, JPanel panel) {// set sản phẩm vào jpanel
+        JPanel productPanel = new JPanel();
+        productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
 
-    JLabel productName = new JLabel(product.getIdProductName());
-    JLabel productPrice = new JLabel(String.format("Giá: %.2f", product.getPrice()));
-    JLabel productImage = new JLabel();
-    setProductImage(product.getImage(), productImage);
+        JLabel productName = new JLabel(product.getIdProductName());
+        JLabel productPrice = new JLabel(String.format("Giá: %.2f", product.getPrice()));
+        JLabel productImage = new JLabel();
+        setProductImage(product.getImage(), productImage);
 
-    productImage.setPreferredSize(new Dimension(150, 150));//set size ảnh
-    JTextField quantityField = new JTextField("1", 5);
-    quantityField.setMaximumSize(new Dimension(50, 30));
+        productImage.setPreferredSize(new Dimension(150, 150));//set size ảnh
+        JTextField quantityField = new JTextField("1", 5);
+        quantityField.setMaximumSize(new Dimension(50, 30));
 
-    JButton addButton = new JButton("Thêm");
-    addButton.addActionListener(evt -> addProductToOrder(product.getIdProductName(), productPrice, quantityField));
+        JButton addButton = new JButton("Thêm");
+        addButton.addActionListener(evt -> addProductToOrder(product.getIdProductName(), productPrice, quantityField));
 
-    productPanel.add(productImage);
-    productPanel.add(productName);
-    productPanel.add(productPrice);
-    productPanel.add(quantityField);
-    productPanel.add(addButton);
+        productPanel.add(productImage);
+        productPanel.add(productName);
+        productPanel.add(productPrice);
+        productPanel.add(quantityField);
+        productPanel.add(addButton);
 
-    panel.add(productPanel);
-    panel.revalidate();
-    panel.repaint();
-}
+        panel.add(productPanel);
+        panel.revalidate();
+        panel.repaint();
+    }
 
 
-
+   
     private void setProductImage(String imagePath, JLabel label) {
         try {
             URL url = new URL(imagePath);
@@ -286,6 +300,7 @@ public class Oder extends javax.swing.JFrame {
         jbltongtien = new javax.swing.JLabel();
         btnxoa = new javax.swing.JButton();
         btnxoa1 = new javax.swing.JButton();
+        btnInHoaDon = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -351,6 +366,13 @@ public class Oder extends javax.swing.JFrame {
             }
         });
 
+        btnInHoaDon.setText("In hóa đơn");
+        btnInHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInHoaDonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -369,17 +391,21 @@ public class Oder extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jbltongtien, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(90, 90, 90))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnthanhtoan)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(btnxoa1)
                                         .addGap(18, 18, 18)
-                                        .addComponent(btnxoa)))
+                                        .addComponent(btnxoa))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(btnInHoaDon)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnthanhtoan)))
                                 .addGap(21, 21, 21))))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -397,7 +423,9 @@ public class Oder extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jbltongtien, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnthanhtoan)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnthanhtoan)
+                    .addComponent(btnInHoaDon))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
@@ -412,7 +440,7 @@ public class Oder extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -443,24 +471,101 @@ int selectedRow = jtblthongtin.getSelectedRow(); // Get the selected row index
     }//GEN-LAST:event_btnxoaActionPerformed
 
     private void btnxoa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxoa1ActionPerformed
-int selectedRow = jtblthongtin.getSelectedRow(); 
-    if (selectedRow >= 0) {
-        OrderItem selectedItem = orderItems.get(selectedRow);
-        if (selectedItem.quantity > 1) {
-          
-            selectedItem.quantity--;
+        int selectedRow = jtblthongtin.getSelectedRow(); 
+        if (selectedRow >= 0) {
+            OrderItem selectedItem = orderItems.get(selectedRow);
+            if (selectedItem.quantity > 1) {
+
+                selectedItem.quantity--;
+            } else {
+
+                orderItems.remove(selectedRow);
+            }
+            updateOrderDetails(); // Refresh the order details
+            JOptionPane.showMessageDialog(this, "Đã xóa 1 sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } else {
-           
-            orderItems.remove(selectedRow);
+            // Show a warning if no row is selected
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để xóa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         }
-        updateOrderDetails(); // Refresh the order details
-        JOptionPane.showMessageDialog(this, "Đã xóa 1 sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-    } else {
-        // Show a warning if no row is selected
-        JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để xóa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-    }
 
     }//GEN-LAST:event_btnxoa1ActionPerformed
+
+    private void btnInHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHoaDonActionPerformed
+         // Đường dẫn lưu file PDF
+        String filePath = "D:\\FPTPoly\\KY_III\\DuAn1\\DuAn1_PhanMemBanCaPhe\\HoaDon.pdf";
+
+        try {
+            // Tạo đối tượng Document
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+
+            document.open();
+
+            // Đường dẫn đến file font hỗ trợ Unicode
+            String fontPath = "C:\\Windows\\Fonts\\times.ttf"; // Đường dẫn đến file TTF trên Windows
+
+            // Cấu hình font
+            BaseFont baseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            Font fontTitle = new Font(baseFont, 18, Font.BOLD, BaseColor.BLACK);
+            Font fontInfo = new Font(baseFont, 12, Font.NORMAL, BaseColor.BLACK);
+            Font fontHeader = new Font(baseFont, 12, Font.BOLD, BaseColor.WHITE);
+
+            // Tiêu đề hóa đơn
+            Paragraph title = new Paragraph("HÓA ĐƠN THANH TOÁN\n\n", fontTitle);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            // Thông tin cửa hàng
+            Paragraph shopInfo = new Paragraph("The Coffee\nĐịa chỉ: Tòa T - Công viên phần mềm Quận 12\nĐiện thoại: 0339248209\n\n", fontInfo);
+            shopInfo.setAlignment(Element.ALIGN_LEFT);
+            document.add(shopInfo);
+
+            // Thêm ngày giờ
+            Paragraph dateTime = new Paragraph("Ngày: " + java.time.LocalDate.now() + " - Giờ: " + java.time.LocalTime.now() + "\n\n", fontInfo);
+            document.add(dateTime);
+
+            // Tạo bảng hóa đơn
+            PdfPTable table = new PdfPTable(3); // 3 cột: Tên món, số lượng, giá
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+
+            // Tiêu đề các cột
+            PdfPCell header1 = new PdfPCell(new Phrase("Tên món", fontHeader));
+            PdfPCell header2 = new PdfPCell(new Phrase("Số lượng", fontHeader));
+            PdfPCell header3 = new PdfPCell(new Phrase("Giá (VND)", fontHeader));
+
+            header1.setBackgroundColor(BaseColor.GRAY);
+            header2.setBackgroundColor(BaseColor.GRAY);
+            header3.setBackgroundColor(BaseColor.GRAY);
+
+            table.addCell(header1);
+            table.addCell(header2);
+            table.addCell(header3);
+
+            // Dữ liệu hóa đơn
+            for (OrderItem orderItem : orderItems) {
+                table.addCell(new Phrase(orderItem.productName, fontInfo));
+                table.addCell(new Phrase(String.valueOf(orderItem.quantity), fontInfo));
+                table.addCell(new Phrase(String.valueOf(orderItem.getTotalPrice()), fontInfo));
+            }
+
+            document.add(table);
+
+            // Tổng tiền
+            double totalAmount = orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+            Paragraph total = new Paragraph("Tổng tiền: " + totalAmount + " VND", fontInfo);
+            total.setAlignment(Element.ALIGN_RIGHT);
+            document.add(total);
+
+            document.close();
+            JOptionPane.showMessageDialog(this, "In hóa đơn thành công! File lưu tại: " + filePath);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi in hóa đơn: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnInHoaDonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -498,6 +603,7 @@ int selectedRow = jtblthongtin.getSelectedRow();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnInHoaDon;
     private javax.swing.JButton btnthanhtoan;
     private javax.swing.JButton btnxoa;
     private javax.swing.JButton btnxoa1;

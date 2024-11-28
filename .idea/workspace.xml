@@ -4,7 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21837e30-747d-4724-a2a0-db3c855ed400" name="Changes" comment="" />
+    <list default="true" id="21837e30-747d-4724-a2a0-db3c855ed400" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/ChuongTrinhGiamGia.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/ChuongTrinhGiamGia.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/ChuongTrinhGiamGia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/ChuongTrinhGiamGia.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/CustomerJDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/CustomerJDialog.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/CustomerJDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/CustomerJDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Login.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Login.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/LoginWithAdmin.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/LoginWithAdmin.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/LoginWithAdmin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/LoginWithAdmin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/LoginWithManager.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/LoginWithManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Oder.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Oder.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/Oder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/Oder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/QuanLyNhanVien.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/QuanLyNhanVien.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/QuanLyTaiKhoan.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/QuanLyTaiKhoan.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/QuanLyTaiKhoan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/QuanLyTaiKhoan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/QuenMatKhau.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/QuenMatKhau.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/QuenMatKhau.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/QuenMatKhau.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Test/DoanhThuJDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test/DoanhThuJDialog.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Test/DoanhThuJDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test/DoanhThuJDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/Jdbc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/Jdbc.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,20 +46,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/FPTPoly/KY_III/DuAn1/DuAn1_PhanMemBanCaPhe",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat__InHoaDon&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/FPTPoly/KY_III/DuAn1/DuAn1_PhanMemBanCaPhe&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -53,7 +78,9 @@
       <updated>1732112292933</updated>
       <workItem from="1732112294002" duration="646000" />
       <workItem from="1732112955094" duration="27000" />
-      <workItem from="1732112991012" duration="2695000" />
+      <workItem from="1732112991012" duration="4391000" />
+      <workItem from="1732688105703" duration="654000" />
+      <workItem from="1732758673075" duration="165000" />
     </task>
     <servers />
   </component>
