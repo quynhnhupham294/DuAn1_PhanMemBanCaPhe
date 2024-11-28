@@ -1,5 +1,6 @@
 package GUI;
 
+import Test.ChuongTrinhGiamGia;
 import Test.DoanhThuJDialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
