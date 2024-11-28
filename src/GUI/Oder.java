@@ -6,6 +6,11 @@ package GUI;
 import DAOImpl.DiscountDAOImpl;
 import DAOImpl.ProductDAOImpl;
 import Entity.Discount;
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import java.sql.SQLException;
+import java.util.List;
 import javax.swing.JOptionPane;
 import Entity.Product;
 import java.awt.Component;
@@ -14,7 +19,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -27,7 +31,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -40,7 +43,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import utils.Jdbc;
-    import java.text.DecimalFormat;
+
 /**
  *
  * @author vuthe
@@ -51,14 +54,6 @@ public class Oder extends javax.swing.JFrame {
     
     private DiscountDAOImpl daoImpl = new DiscountDAOImpl();
     int row = -1;
-    
-
-
-
-    
-
-
-
     /**
      * Creates new form Oder
      */
@@ -67,6 +62,7 @@ public class Oder extends javax.swing.JFrame {
         form();
         loadProductData1();
         showComboData();
+
     }
 
     class OrderItem {
@@ -270,20 +266,20 @@ public class Oder extends javax.swing.JFrame {
             orderDetails.append("\n").append(orderItem.productName)
                         .append("  Số lượng: ").append(orderItem.quantity)
                         .append("  Thành tiền: ").append(orderItem.getTotalPrice());
-           
         }
- // Lấy giá trị discountAmount và finalPrice
-    double discountAmount = Double.parseDouble(txtDiscountAmount.getText().replaceAll("[^\\d.]", ""));
-    double finalPrice = Double.parseDouble(txtFinalPrice.getText().replaceAll("[^\\d.]", ""));
+        
+        // Thêm phần thông tin giảm giá và tổng tiền vào orderDetails
+        double totalPrice = Double.parseDouble(jbltongtien.getText().replaceAll("[^\\d.]", ""));
+        double discountAmount = Double.parseDouble(txtDiscountAmount.getText().replaceAll("[^\\d.]", ""));
+        double finalPrice = totalPrice - discountAmount;
+        // Thêm thông tin finalPrice và discountAmount vào orderDetails
+        orderDetails.append("\nMã giảm giá: ").append(txtComboID.getSelectedItem())
+                    .append("\nSố tiền giảm: ").append(String.format("%.3f", discountAmount))
+                    .append("\nTổng cộng: ").append(String.format("%.3f", finalPrice));
 
-    // Thêm thông tin mã giảm giá, số tiền giảm và tổng tiền sau giảm vào orderDetails
-    orderDetails.append("Mã giảm giá: ").append(txtComboID.getSelectedItem())
-                .append("\nSố tiền giảm: ").append(String.format("%.3f", discountAmount))
-                .append("\nTổng tiền sau giảm: ").append(String.format("%.3f", finalPrice));
-
-    // In ra thông tin đơn hàng
-    System.out.println(orderDetails.toString());
-
+        // In ra thông tin đơn hàng
+        System.out.println(orderDetails.toString());
+                        
         if (orderDetails.length() > 0) {
             JOptionPane.showMessageDialog(this, "Đã xử lý thanh toán cho:\n" + orderDetails.toString());
         } else {
@@ -317,18 +313,17 @@ public class Oder extends javax.swing.JFrame {
         btnxoa1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txtComboID = new javax.swing.JComboBox<>();
-        txtDiscountAmount = new javax.swing.JLabel();
-        txtFinalPrice = new javax.swing.JLabel();
-        btnclearForm = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtDiscountAmount = new javax.swing.JTextField();
+        txtFinalPrice = new javax.swing.JTextField();
+        btnApplyDiscount = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("The Coffee");
 
-        btnthanhtoan.setBackground(new java.awt.Color(255, 0, 51));
-        btnthanhtoan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnthanhtoan.setForeground(new java.awt.Color(255, 255, 255));
         btnthanhtoan.setText("Thanh toán");
         btnthanhtoan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -353,7 +348,7 @@ public class Oder extends javax.swing.JFrame {
         );
         jpltraLayout.setVerticalGroup(
             jpltraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
+            .addGap(0, 545, Short.MAX_VALUE)
         );
 
         tblcoffe.addTab("Trà ", jpltra);
@@ -397,17 +392,24 @@ public class Oder extends javax.swing.JFrame {
             }
         });
 
-        txtDiscountAmount.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setText("Số tiền đã giảm:");
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel4.setText("Tổng cộng:");
+
+        txtDiscountAmount.setEditable(false);
+        txtDiscountAmount.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+
+        txtFinalPrice.setEditable(false);
         txtFinalPrice.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txtFinalPrice.setForeground(new java.awt.Color(255, 0, 51));
+        txtFinalPrice.setForeground(new java.awt.Color(255, 0, 0));
 
-        btnclearForm.setBackground(new java.awt.Color(242, 242, 242));
-        btnclearForm.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnclearForm.setText("Bỏ chọn mã giảm giá");
-        btnclearForm.addActionListener(new java.awt.event.ActionListener() {
+        btnApplyDiscount.setText("Chọn");
+        btnApplyDiscount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnclearFormActionPerformed(evt);
+                btnApplyDiscountActionPerformed(evt);
             }
         });
 
@@ -425,76 +427,90 @@ public class Oder extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtComboID, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtDiscountAmount)
+                            .addComponent(txtFinalPrice))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnthanhtoan, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(59, 59, 59)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btnxoa1)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(btnxoa))
-                                    .addComponent(jLabel2)
-                                    .addComponent(txtComboID, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnclearForm, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jbltongtien, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(69, 69, 69))
+                                    .addComponent(btnthanhtoan, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(btnApplyDiscount)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtDiscountAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                                    .addComponent(jbltongtien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtFinalPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(btnxoa1)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnxoa)))
                         .addGap(21, 21, 21))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnxoa)
+                        .addGap(7, 7, 7))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(txtComboID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnApplyDiscount))
+                            .addComponent(btnxoa1))
+                        .addGap(12, 12, 12)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jbltongtien, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnthanhtoan))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtDiscountAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtFinalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tblcoffe)
                 .addGap(3, 3, 3))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jbltongtien, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnxoa1)
-                        .addComponent(btnxoa)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(txtDiscountAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(txtFinalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtComboID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(btnclearForm)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnthanhtoan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -539,19 +555,12 @@ int selectedRow = jtblthongtin.getSelectedRow();
     }//GEN-LAST:event_btnxoa1ActionPerformed
 
     private void txtComboIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtComboIDActionPerformed
-    txtComboID.addItemListener(e -> {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
-        applySelectedDiscount(); // Gọi lại hàm áp dụng giảm giá
-    }
-});
         // TODO add your handling code here:
     }//GEN-LAST:event_txtComboIDActionPerformed
 
-    private void btnclearFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnclearFormActionPerformed
-                // Tạo nút "Bỏ chọn" và thêm vào giao diện
-                btnclearForm.addActionListener(e -> clearForm());
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnclearFormActionPerformed
+    private void btnApplyDiscountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyDiscountActionPerformed
+        btnApplyDiscountActionPerformed();
+    }//GEN-LAST:event_btnApplyDiscountActionPerformed
 
     /**
      * @param args the command line arguments
@@ -589,12 +598,14 @@ int selectedRow = jtblthongtin.getSelectedRow();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnclearForm;
+    private javax.swing.JButton btnApplyDiscount;
     private javax.swing.JButton btnthanhtoan;
     private javax.swing.JButton btnxoa;
     private javax.swing.JButton btnxoa1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jbltongtien;
@@ -606,8 +617,8 @@ int selectedRow = jtblthongtin.getSelectedRow();
     private javax.swing.JTable jtblthongtin;
     private javax.swing.JTabbedPane tblcoffe;
     private javax.swing.JComboBox<String> txtComboID;
-    private javax.swing.JLabel txtDiscountAmount;
-    private javax.swing.JLabel txtFinalPrice;
+    private javax.swing.JTextField txtDiscountAmount;
+    private javax.swing.JTextField txtFinalPrice;
     // End of variables declaration//GEN-END:variables
     // CHỨC NĂNG ÁP DỤNG MÃ GIẢM GIÁ
     private List<String> showComboData() {
@@ -617,8 +628,6 @@ int selectedRow = jtblthongtin.getSelectedRow();
     List<Discount> discounts = daoImpl.getAllData();
     // Xóa dữ liệu cũ trong comboBox
     txtComboID.removeAllItems();
-    // Thêm item mặc định "Chọn mã giảm giá"
-    txtComboID.addItem("");
     // Lấy tổng tiền từ jbltongtien, chuyển đổi chuỗi thành số thực để xét
     double totalPrice = extractNumericValue(jbltongtien.getText());
     // Duyệt qua danh sách và thêm idDiscount vào comboBox
@@ -682,8 +691,6 @@ int selectedRow = jtblthongtin.getSelectedRow();
         List<String> availableDiscounts = showComboData();
         // Xóa hết item trong combobox
         txtComboID.removeAllItems();
-        // Thêm item mặc định "Chọn mã giảm giá"
-        txtComboID.addItem("Chọn mã giảm giá");
         // Kiểm tra nếu k có mgg nào khả dụng, nếu có thêm vào combobox
         if (availableDiscounts.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Không có mã giảm giá nào khả dụng cho tổng tiền này.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -695,57 +702,44 @@ int selectedRow = jtblthongtin.getSelectedRow();
         
     }
     
-    // Áp dụng mã giảm giá
-    private void applySelectedDiscount() {
-    String selectedDiscountCode = (String) txtComboID.getSelectedItem();
-    if (selectedDiscountCode == null || selectedDiscountCode.isEmpty()) {
-        return; // Nếu không chọn mã nào, không làm gì cả
+    // Áp dụng mã giảm giá được chọn
+    private void btnApplyDiscountActionPerformed() {
+        String selectedDiscountCode = (String) txtComboID.getSelectedItem();
+        // Kiểm tra nếu k chọn mgg
+        if (selectedDiscountCode == null || selectedDiscountCode.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn mã giảm giá!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // Lấy đối tượng discount từ mgg đã chọn
+        Discount discount = daoImpl.getDataById(selectedDiscountCode); // Lấy Discount theo ID
+        if (discount == null) {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy mã giảm giá đã chọn!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Chuyển giá trị phần trăm giảm giá thành chuỗi số (nếu nó không phải chuỗi số)
+        double discountPercentage;
+        try {
+            discountPercentage = Double.parseDouble(discount.getDiscountPercentage());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Phần trăm giảm giá không hợp lệ!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        updateOrderTotal(); // Tính lại tổng tiền từ OrderItems
+        double totalPrice = Double.parseDouble(jbltongtien.getText().replaceAll("[^\\d.]", ""));
+        double discountAmount = totalPrice * (discountPercentage / 100); // Số tiền được giảm
+        double finalPrice = totalPrice - discountAmount; // Tổng tiền sau giảm giá
+        // Hiển thị kết quả vào các ô TextField
+        txtDiscountAmount.setText(String.format("%.3f", discountAmount)); // Hiển thị số tiền giảm
+        txtFinalPrice.setText(String.format("%.3f", finalPrice)); // Hiển thị tổng tiền sau khi giảm
     }
-
-    // Lấy đối tượng Discount từ mã giảm giá
-    Discount discount = daoImpl.getDataById(selectedDiscountCode);
-    if (discount == null) {
-        JOptionPane.showMessageDialog(null, "Không tìm thấy mã giảm giá đã chọn!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Chuyển đổi phần trăm giảm giá thành số thực
-    double discountPercentage;
-    try {
-        discountPercentage = Double.parseDouble(discount.getDiscountPercentage());
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "Phần trăm giảm giá không hợp lệ!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Lấy tổng tiền từ jbltongtien
-    double totalPrice = extractNumericValue(jbltongtien.getText());
-    double discountAmount = totalPrice * (discountPercentage / 100);
-    double finalPrice = totalPrice - discountAmount;
-    
-        // Cập nhật các ô label hiển thị
-        txtDiscountAmount.setText("Giảm giá: "+String.format("%.3f",discountAmount));
-        txtFinalPrice.setText("Tổng tiền: "+String.format("%.3f", finalPrice));
-        DecimalFormat df = new DecimalFormat("#.##"); // Không hiển thị số 0 thừa
-        txtDiscountAmount.setText("Giảm giá: " + df.format(discountAmount));
-        txtFinalPrice.setText("Tổng tiền: " + df.format(finalPrice));
-    
-     }
     
 
-        // Phương thức bỏ chọn mã giảm giá
-         private void clearForm() {
-         // Đặt lại item mặc định "Chọn mã giảm giá"
-         txtComboID.setSelectedIndex(0); // Điều này sẽ chọn lại item đầu tiên trong ComboBox, tức là "Chọn mã giảm giá"
-         txtFinalPrice.setText("");
-         txtDiscountAmount.setText("");
-         // Nếu bạn muốn giữ ComboBox trống thay vì chọn lại item đầu tiên, có thể dùng:
-         // txtComboID.setSelectedIndex(-1); 
-          }
+// Định dạng số tiền thành dạng "1.000.000"
+private String formatCurrency(double value) {
+    NumberFormat formatter = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+    return formatter.format(value);
+}
 
-
-    
-    
  
 
 }
