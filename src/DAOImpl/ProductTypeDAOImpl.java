@@ -5,7 +5,7 @@
 package DAOImpl;
 
 import DAO.DAO;
-import Entity.ProductType; // Correctly import the ProductType class
+import Entity.ProductType;
 import utils.Jdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;

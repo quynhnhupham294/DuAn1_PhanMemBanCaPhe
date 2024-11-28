@@ -10,21 +10,14 @@ import DAOImpl.CustomerDAOImpl;
 import Entity.Customer;
 import utils.MessageBox;
 import java.util.List;
-import java.util.jar.Attributes;
-import javax.swing.JFrame;
+
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Quang
- */
 public class CustomerJDialog extends javax.swing.JFrame implements InitForm<Customer>, CrudController {
 
     private CustomerDAOImpl daoImpl = new CustomerDAOImpl();
     int row = -1;
-    /**
-     * Creates new form CustomerJDialog
-     */
+
     public CustomerJDialog() {
         initComponents();
         initialize();
@@ -230,18 +223,18 @@ public class CustomerJDialog extends javax.swing.JFrame implements InitForm<Cust
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(16, 16, 16)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
+                .addGap(40, 40, 40)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(85, 85, 85))
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -391,14 +384,14 @@ public class CustomerJDialog extends javax.swing.JFrame implements InitForm<Cust
     @Override
     public void getForm(int index) {
         Customer cust = daoImpl.getAllData().get(index);
-        
+
         setForm(cust);
     }
 
     @Override
     public void create() {
         if (isCheckValid()) {
-            if (isCheckDuplicate()) {
+            if (isCheckDuplicate() && isCheckRegex()) {
                 daoImpl.insertData(new Customer(
                         txtId.getText(),
                         txtName.getText(),
@@ -440,7 +433,7 @@ public class CustomerJDialog extends javax.swing.JFrame implements InitForm<Cust
 
     @Override
     public void edit() {
-        
+
     }
 
     @Override
@@ -452,9 +445,30 @@ public class CustomerJDialog extends javax.swing.JFrame implements InitForm<Cust
                 "",
                 rootPaneCheckingEnabled,
                 ""));
-       
+
         txtPoint.setText("");
 
+    }
+
+    private boolean isCheckRegex() {
+       
+        String idPattern = "^KH\\d+$";
+        
+        String phonePattern = "^0\\d{9}$";
+
+        String id = txtId.getText().trim();
+        String phone = txtPhone.getText().trim();
+        if (!id.matches(idPattern)) {
+            MessageBox.alert(this, "Mã Khách không hợp lệ. Mã Khách phải bắt đầu với KH và theo sau là các số.");
+            return false;
+        }
+
+        
+        if (!phone.matches(phonePattern)) {
+            MessageBox.alert(this, "Số điện thoại không hợp lệ! Số điện thoại phải bắt đầu từ số 0 và có 10 số.");
+            return false;
+        }
+        return true;
     }
 
     public boolean isCheckValid() {
@@ -510,7 +524,8 @@ public class CustomerJDialog extends javax.swing.JFrame implements InitForm<Cust
             return true;
         }
     }
-      public void showDetail(){ 
+
+    public void showDetail() {
         int index = tblCustomer.getSelectedRow();
         getForm(index);
     }

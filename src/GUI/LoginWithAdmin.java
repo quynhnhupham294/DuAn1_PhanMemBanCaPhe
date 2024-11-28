@@ -118,7 +118,7 @@ public class LoginWithAdmin extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 255, 204));
-        jPanel2.setLayout(new java.awt.CardLayout());
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         pnNhanVien.setBackground(new java.awt.Color(204, 255, 255));
 
@@ -133,7 +133,7 @@ public class LoginWithAdmin extends javax.swing.JFrame {
             .addGap(0, 470, Short.MAX_VALUE)
         );
 
-        jPanel2.add(pnNhanVien, "card2");
+        jPanel2.add(pnNhanVien, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pnQuanLyTaiKhoan.setBackground(new java.awt.Color(204, 204, 255));
 
@@ -148,7 +148,7 @@ public class LoginWithAdmin extends javax.swing.JFrame {
             .addGap(0, 470, Short.MAX_VALUE)
         );
 
-        jPanel2.add(pnQuanLyTaiKhoan, "card3");
+        jPanel2.add(pnQuanLyTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

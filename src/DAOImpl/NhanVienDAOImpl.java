@@ -13,7 +13,7 @@ public class NhanVienDAOImpl implements NhanVienDAO{
     String sqlSelectID = "SELECT * FROM [User] WHERE idUser = ?"; // findById
     String sqlInsert = "INSERT INTO [User](idUser, userName, password, phone, address, description, email, idRole)"
                      + "VALUES(?, ?, ?, ?, ?, ?, ?)";
-    String sqlUpdate = "UPDATE [User] SET userName = ?, password = ?, phone = ?, address = ?, description = ?, email = ?, idRole = ? WHERE idUser = ?";
+    String sqlUpdate = "uPDATE [User] SET userName = ?, password = ?, phone = ?, address = ?, deUPDATE [User] SET userName = ?, password = ?, phone = ?, address = ?, description = ?, email = ?, idRole = ? WHERE idUser = ?";
     String sqlDelete = "DELETE FROM [User] WHERE idUser = ?";
     
     @Override

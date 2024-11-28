@@ -10,80 +10,81 @@ import DAOImpl.ProductTypeDAOImpl;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import Entity.Revenue;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.DefaultComboBoxModel;
-import Entity.Product;
 import Entity.ProductType;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
- * 
+ *
  */
 public class DoanhThuJDialog extends javax.swing.JFrame {
-    
-    
+// Khai báo DAO để truy xuất dữ liệu doanh thu và loại sản phẩm 
+
     private RevenueDAOImpl dao = new RevenueDAOImpl();
-    private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); // Định dạng ngày tháng
     private ProductTypeDAOImpl daoProType = new ProductTypeDAOImpl();
+
     /**
      * Creates new form DoanhThuJDialog
      */
     public DoanhThuJDialog() {
         initComponents();
         init();
+
     }
-    
-    
-    
+
     public void init() {
-        fillToTable();
-        generateCbx();
-        
+        fillToTable();     // fill dữ liệu vào bảng
+        generateCbx();     // Tạo các combobox
+
         setLocationRelativeTo(null);
     }
-    
-    
-  
+
     public void generateCbx() {
-        cbxLoaiSanPham();
-        cbxNam();
+        cbxLoaiSanPham();  // Tạo combobox cho loại sản phẩm
+        cbxNam();          // Tạo combobox cho năm
     }
-        
+
     public void cbxNam() {
+        // Khởi tạo combobox cho năm
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        List<Integer> list = dao.getYear();
-        
-        model.addElement("Tất cả");
+        List<Integer> list = dao.getYear(); // Lấy LIST các năm từ cơ sở dữ liệu
+
+        model.addElement("Tất cả"); // Thêm lựa chọn "Tất cả"
         for (Integer o : list) {
-            model.addElement(String.valueOf(o));
+            model.addElement(String.valueOf(o));  // Thêm các năm vào combobox
         }
-        
-        cbxNam.setModel(model);
+
+        cbxNam.setModel(model);  // fill vào combobox năm
     }
-    
+
     public void cbxLoaiSanPham() {
+        // Khởi tạo  combobox loại sản phẩm
         DefaultComboBoxModel model = new DefaultComboBoxModel();
-        List<ProductType> list = daoProType.getAllData();
-        
-        model.addElement("Tất cả");
+        List<ProductType> list = daoProType.getAllData(); // Lấy danh sách loại sản phẩm
+
+        model.addElement("Tất cả"); // Thêm lựa chọn "Tất cả"
         for (ProductType o : list) {
-            model.addElement(o.getProductTypeName());
+            model.addElement(o.getProductTypeName()); // Thêm tên loại sản phẩm vào combobox
         }
-        
-        cbxLoaiSanPham.setModel(model);
+
+        cbxLoaiSanPham.setModel(model);  // fill vào combobox  loại sản phẩm
     }
-    
-    
+
     public void fillToTable() {
-        DefaultTableModel model = new DefaultTableModel();
-        List<Revenue> list = dao.getAllData();
-        
+        DefaultTableModel model = new DefaultTableModel();  // Khởi tạo table
+        List<Revenue> list = dao.getAllData();  // Lấy tất cả dữ liệu doanh thu
+
+        // Cột của bảng
         String[] col = {
             "Mã sản phẩm",
             "Tên sản phẩm",
@@ -93,9 +94,10 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
             "Tổng tiền",
             "Ngày lập"
         };
-        
-        model.setColumnIdentifiers(col);
-        
+
+        model.setColumnIdentifiers(col);  // Đặt các cột cho bảng
+
+        // Điền dữ liệu vào bảng
         for (Revenue o : list) {
             model.addRow(new Object[]{
                 o.getIdProduct(),
@@ -107,59 +109,10 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
                 formatter.format(o.getDateTimeOrder())
             });
         }
-        
-        tblDoanhThu.setModel(model);
+
+        tblDoanhThu.setModel(model);  // fill cho bảng doanh thu
     }
-    
-    
-    public void filterTable() {
-        DefaultTableModel model = new DefaultTableModel();
-        
-        String timKiem = txtTimKiem.getText();
-        
-        String selectValueNam = (String) cbxNam.getSelectedItem();
-        String resultNam = selectValueNam.equals("Tất cả")?"":selectValueNam;
-        
-        String selectValueLoai = (String) cbxLoaiSanPham.getSelectedItem();
-        String resultLoai = selectValueLoai.equals("Tất cả")?"":selectValueLoai;
-        
-        List<Revenue> list = null;
-        
-        if (resultNam.equals("")) list = dao.getDataByValue(timKiem, resultLoai);
-        else list = dao.getDataByValue(timKiem, resultLoai, Integer.parseInt(resultNam));
-                     
-        String[] col = {
-            "Mã sản phẩm",
-            "Tên sản phẩm",
-            "Tên loại",
-            "Đơn giá",
-            "Số lượng",
-            "Tổng tiền",
-            "Ngày lập"
-        };
-        
-        model.setColumnIdentifiers(col);
-        
-        for (Revenue o : list) {
-            model.addRow(new Object[]{
-                o.getIdProduct(),
-                o.getProductName(),
-                o.getProductNameType(),
-                o.getPrice(),
-                o.getQuantity(),
-                o.getTotalMoney(),
-                formatter.format(o.getDateTimeOrder())
-            });
-        }
-        
-        tblDoanhThu.setModel(model);
-    }
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -174,6 +127,8 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        pnDoanhThu = new javax.swing.JPanel();
+        lblDoanThu = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -208,7 +163,7 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
             }
         });
 
-        btnImportExel.setText("Excel");
+        btnImportExel.setText("Xuất Excel");
         btnImportExel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnImportExelActionPerformed(evt);
@@ -221,6 +176,27 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
 
         jLabel3.setText("Tìm kiếm");
 
+        pnDoanhThu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblDoanThu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblDoanThu.setText("Tổng Doanh Thu:");
+
+        javax.swing.GroupLayout pnDoanhThuLayout = new javax.swing.GroupLayout(pnDoanhThu);
+        pnDoanhThu.setLayout(pnDoanhThuLayout);
+        pnDoanhThuLayout.setHorizontalGroup(
+            pnDoanhThuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnDoanhThuLayout.createSequentialGroup()
+                .addComponent(lblDoanThu, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnDoanhThuLayout.setVerticalGroup(
+            pnDoanhThuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnDoanhThuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblDoanThu, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -228,9 +204,6 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 805, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(17, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,17 +219,22 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnImportExel)
-                                .addGap(76, 76, 76))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                .addGap(131, 131, 131)
+                                .addComponent(btnImportExel))
+                            .addComponent(jLabel3))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 805, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 20, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnDoanhThu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(117, 117, 117))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
+                .addContainerGap(41, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -267,9 +245,11 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
                     .addComponent(cbxLoaiSanPham)
                     .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImportExel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                .addGap(49, 49, 49)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(pnDoanhThu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -305,7 +285,7 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxNamActionPerformed
 
     private void btnImportExelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportExelActionPerformed
-       
+        exportToExcel();
     }//GEN-LAST:event_btnImportExelActionPerformed
 
     /**
@@ -355,9 +335,142 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblDoanThu;
+    private javax.swing.JPanel pnDoanhThu;
     private javax.swing.JTable tblDoanhThu;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 
-   
+   public double calculateTotalRevenue(String productType, String year) {
+        double totalRevenue = 0.0;
+
+        // Chuyển đổi năm thành null nếu chọn "Tất cả"
+        Integer selectedYear = year.equals("Tất cả") ? null : Integer.parseInt(year);
+
+        // Chuyển đổi loại sản phẩm thành chuỗi rỗng nếu chọn "Tất cả"
+        String selectedProductType = productType.equals("Tất cả") ? "" : productType;
+
+        // Lấy dữ liệu doanh thu đã lọc
+        List<Revenue> filteredData = (selectedYear == null)
+                ? dao.getDataByValue("", selectedProductType)
+                : dao.getDataByValue("", selectedProductType, selectedYear);
+
+        // Tính tổng doanh thu
+        for (Revenue revenue : filteredData) {
+            totalRevenue += revenue.getTotalMoney();
+        }
+
+        return totalRevenue;  // Trả về tổng doanh thu
+    }
+
+    /**
+     * Hàm lọc bảng dựa trên các điều kiện đã chọn
+     */
+    public void filterTable() {
+        DefaultTableModel model = new DefaultTableModel();  // Khởi tạo mô hình bảng
+
+        // Lấy dữ liệu từ  ô nhập và combobox
+        String searchQuery = txtTimKiem.getText();
+        String selectedYear = (String) cbxNam.getSelectedItem();
+        String selectedProductType = (String) cbxLoaiSanPham.getSelectedItem();
+
+        // Xử lý các điều kiện lọc
+        String yearFilter = selectedYear.equals("Tất cả") ? "" : selectedYear;
+        String productTypeFilter = selectedProductType.equals("Tất cả") ? "" : selectedProductType;
+
+        // Lấy dữ liệu doanh thu đã lọc
+        List<Revenue> filteredData = yearFilter.isEmpty()
+                ? dao.getDataByValue(searchQuery, productTypeFilter)
+                : dao.getDataByValue(searchQuery, productTypeFilter, Integer.parseInt(yearFilter));
+
+        
+        String[] col = {
+            "Mã sản phẩm",
+            "Tên sản phẩm",
+            "Tên loại",
+            "Đơn giá",
+            "Số lượng",
+            "Tổng tiền",
+            "Ngày lập"
+        };
+        model.setColumnIdentifiers(col);
+
+        for (Revenue revenue : filteredData) {
+            model.addRow(new Object[]{
+                revenue.getIdProduct(),
+                revenue.getProductName(),
+                revenue.getProductNameType(),
+                revenue.getPrice(),
+                revenue.getQuantity(),
+                revenue.getTotalMoney(),
+                formatter.format(revenue.getDateTimeOrder())
+            });
+        }
+        tblDoanhThu.setModel(model);  // fill vao table doanh thu
+
+        // Tính tổng doanh thu và hiển thị label
+        double totalRevenue = calculateTotalRevenue(selectedProductType, selectedYear);
+        lblDoanThu.setText("Tổng Doanh Thu: " + totalRevenue + " VND");
+    }
+
+    public void exportToExcel() {
+    try {
+        // Khởi tạo JFileChooser để người dùng chọn nơi lưu tệp
+        JFileChooser fileChooser = new JFileChooser();
+
+        // Nếu người dùng chọn tệp để lưu
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            // Lấy tệp đã chọn
+            File file = fileChooser.getSelectedFile();
+
+            // Kiểm tra xem tên tệp có kết thúc bằng ".xlsx" không, nếu không thì thêm phần mở rộng này
+            if (!file.getName().toLowerCase().endsWith(".xlsx")) {
+                file = new File(file.getAbsolutePath() + ".xlsx");
+            }
+
+            // Tạo một workbook (tập tin Excel) mới với Apache POI
+            Workbook workbook = new XSSFWorkbook();
+
+            // Tạo một sheet mới trong workbook
+            org.apache.poi.ss.usermodel.Sheet sheet = workbook.createSheet("Doanh thu");
+
+            // Lấy mô hình dữ liệu từ bảng (DefaultTableModel) để truy xuất dữ liệu
+            DefaultTableModel model = (DefaultTableModel) tblDoanhThu.getModel();
+
+            // Tạo hàng đầu tiên (tiêu đề cột) trong sheet Excel
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                // Đặt tên cột vào các ô trong hàng đầu tiên
+                headerRow.createCell(i).setCellValue(model.getColumnName(i));
+            }
+
+            // Fill dữ liệu vào các hàng sau
+            for (int rowIndex = 0; rowIndex < model.getRowCount(); rowIndex++) {
+                // Tạo một hàng mới trong Excel cho mỗi dòng dữ liệu
+                Row row = sheet.createRow(rowIndex + 1);
+                for (int colIndex = 0; colIndex < model.getColumnCount(); colIndex++) {
+                    // Lấy giá trị của mỗi ô trong bảng và điền vào Excel
+                    Object cellValue = model.getValueAt(rowIndex, colIndex);
+                    row.createCell(colIndex).setCellValue(cellValue != null ? cellValue.toString() : "");
+                }
+            }
+
+            // Lưu workbook vào tệp
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                workbook.write(out); // Ghi nội dung workbook vào tệp
+            }
+
+            // Đóng workbook sau khi lưu
+            workbook.close();
+
+            // Hiển thị thông báo thành công
+            JOptionPane.showMessageDialog(this, "Xuất file Excel thành công!");
+        }
+    } catch (Exception ex) {
+        // Nếu có lỗi, hiển thị thông báo lỗi
+        JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+    }
+}
+
+
 }

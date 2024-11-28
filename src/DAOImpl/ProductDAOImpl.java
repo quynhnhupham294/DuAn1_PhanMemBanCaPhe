@@ -1,7 +1,7 @@
 package DAOImpl;
 
 import DAO.DAO;
-import Entity.Product; // Correctly import the Product class
+import Entity.Product;
 import utils.Jdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,10 +15,10 @@ public class ProductDAOImpl implements DAO<Product, String> {
     @Override
     public List<Product> getAllData() {
         List<Product> list = new ArrayList<>();
-        
+
         String sql = "SELECT * FROM [Product]";
         Object[] values = {};
-        
+
         ResultSet rs = Jdbc.executeQuery(sql, values);
         try {
             while (rs.next()) {
@@ -40,13 +40,13 @@ public class ProductDAOImpl implements DAO<Product, String> {
     @Override
     public Product getDataById(String idProduct) {
         Product product = null;
-        
+
         String sql = "SELECT * FROM [Product] WHERE idProduct = ?";
         Object[] values = {idProduct};
-        
+
         ResultSet rs = Jdbc.executeQuery(sql, values);
         try {
-            if (rs.next()) { 
+            if (rs.next()) {
                 product = new Product(
                         rs.getString("idProduct"),
                         rs.getString("productName"),
@@ -59,7 +59,7 @@ public class ProductDAOImpl implements DAO<Product, String> {
         } catch (SQLException ex) {
             Logger.getLogger(ProductDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return product; 
+        return product;
     }
 
     @Override
@@ -96,4 +96,5 @@ public class ProductDAOImpl implements DAO<Product, String> {
         Object[] values = {idProduct};
         Jdbc.executeUpdate(sql, values);
     }
+
 }
