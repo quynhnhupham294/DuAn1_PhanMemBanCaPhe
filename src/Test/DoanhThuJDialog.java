@@ -285,7 +285,7 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxNamActionPerformed
 
     private void btnImportExelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportExelActionPerformed
-        exportToExcel();
+//        exportToExcel();
     }//GEN-LAST:event_btnImportExelActionPerformed
 
     /**
@@ -340,6 +340,7 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
     private javax.swing.JTable tblDoanhThu;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
+
 
    public double calculateTotalRevenue(String productType, String year) {
         double totalRevenue = 0.0;
@@ -471,6 +472,8 @@ public class DoanhThuJDialog extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
     }
 }
+
+
 
 
 }

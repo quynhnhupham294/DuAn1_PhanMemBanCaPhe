@@ -49,10 +49,10 @@ public class Discount {
     }
     
     
-    public String getdiscountPercentage() {
+    public String getDiscountPercentage() {
         return discountPercentage;
     }
-    public void setdiscountPercentage(String discountPercentage) {
+    public void setDiscountPercentage(String discountPercentage) {
         this.discountPercentage = discountPercentage;
     }
 
