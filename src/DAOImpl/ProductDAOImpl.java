@@ -64,21 +64,21 @@ public class ProductDAOImpl implements DAO<Product, String> {
 
     @Override
     public void insertData(Product product) {
-        String sql = "INSERT INTO [Product] (idProduct, idProductName, price, image, description, idProductType) VALUES (?, ?, ?, ?, ?, ?)";
-        Object[] values = {
-            product.getIdProduct(),
-            product.getIdProductName(),
-            product.getPrice(),
-            product.getImage(),
-            product.getDescription(),
-            product.getIdProductType()
-        };
-        Jdbc.executeUpdate(sql, values);
-    }
+    String sql = "INSERT INTO [Product] (idProduct, productName, price, image, description, idProductType) VALUES (?, ?, ?, ?, ?, ?)";
+    Object[] values = {
+        product.getIdProduct(),
+        product.getIdProductName(),
+        product.getPrice(),
+        product.getImage(),
+        product.getDescription(),
+        product.getIdProductType()
+    };
+    Jdbc.executeUpdate(sql, values);
+}
 
     @Override
     public void updateData(Product product) {
-        String sql = "UPDATE [Product] SET idProductName=?, price=?, image=?, description=?, idProductType=? WHERE idProduct=?";
+        String sql = "UPDATE [Product] SET productName=?, price=?, image=?, description=?, idProductType=? WHERE idProduct=?";
         Object[] values = {
             product.getIdProductName(),
             product.getPrice(),
@@ -95,5 +95,18 @@ public class ProductDAOImpl implements DAO<Product, String> {
         String sql = "DELETE FROM [Product] WHERE idProduct = ?";
         Object[] values = {idProduct};
         Jdbc.executeUpdate(sql, values);
+    }
+    public List<String> getDistinctProductTypes() {
+        List<String> productTypes = new ArrayList<>();
+        String sql = "SELECT DISTINCT idProductType FROM [Product]"; // Truy vấn để lấy các mã loại duy nhất
+
+        try (ResultSet rs = Jdbc.executeQuery(sql, new Object[] {})) {
+            while (rs.next()) {
+                productTypes.add(rs.getString("idProductType")); // Lấy mã loại sản phẩm
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(ProductDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return productTypes;
     }
 }

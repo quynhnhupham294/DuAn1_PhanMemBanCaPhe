@@ -1,53 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package GUI;
 
 import DAOImpl.ProductDAOImpl;
 import Entity.Product;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.net.URL;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.SwingConstants;
+import utils.XImage;
 
-/**
- *
- * @author vuthe
- */
 public class Oder extends javax.swing.JFrame {
+    
     ProductDAOImpl dao =new ProductDAOImpl();
     private List<OrderItem> orderItems = new ArrayList<>();
-    /**
-     * Creates new form Oder
-     */
+    
     public Oder() {
         initComponents();
         form();
-        loadProductData1();
-        
-        
-       
+        loadProductData1(); 
     }
 
     class OrderItem {
@@ -55,8 +38,8 @@ public class Oder extends javax.swing.JFrame {
         int quantity;
         double price;
         public OrderItem(int quantity) {
-        this.quantity = quantity;
-    }
+            this.quantity = quantity;
+        }
 
         public OrderItem(String productName, int quantity, double price) {
             this.productName = productName;
@@ -69,9 +52,7 @@ public class Oder extends javax.swing.JFrame {
         }
     }
 
-
     private void form() {
-      
         jplcoffe.setLayout(new GridLayout(0, 3));
         jplnuoc.setLayout(new GridLayout(0, 3));
         jplthucan.setLayout(new GridLayout(0, 3));
@@ -82,14 +63,9 @@ public class Oder extends javax.swing.JFrame {
         tblcoffe.addTab("Nước", new JScrollPane(jplnuoc)); 
         tblcoffe.addTab("Thức ăn", new JScrollPane(jplthucan));
         tblcoffe.addTab("Trà", new JScrollPane(jpltra)); 
-   
-
     }
 
-    
-   
-
-   class OrderTableModel extends AbstractTableModel {//bảng sp đã oder
+    class OrderTableModel extends AbstractTableModel {//bảng sp đã oder
         private final String[] columnNames = {"STT", "Tên sản phẩm", "Giá", "Số lượng"};
 
         @Override
@@ -108,9 +84,8 @@ public class Oder extends javax.swing.JFrame {
             switch (columnIndex) {
                 case 0: return rowIndex + 1; // STT
                 case 1: return item.productName; // Tên sản phẩm
-                case 2: return String.format("%.2f", item.price); // Giá
+                case 2: return String.format("%.3f", item.price); // Giá
                 case 3: return item.quantity; // Số lượng
-                
                 default: return null;
             }
         }
@@ -129,16 +104,12 @@ public class Oder extends javax.swing.JFrame {
             return false; // Các ô không thể chỉnh sửa
         }
     }
-
-
-
-
     private void updateOrderTotal() {
         double totalPrice = 0;
         for (OrderItem orderItem : orderItems) {
             totalPrice += orderItem.getTotalPrice();
         }
-        jbltongtien.setText("Tổng số tiền: " + String.format("%.2f", totalPrice));
+        jbltongtien.setText("Tổng số tiền: " + String.format("%.3f", totalPrice));
     }
 
     private void updateOrderDetails() {
@@ -175,46 +146,105 @@ public class Oder extends javax.swing.JFrame {
         }
     }
 
-   private void addProductToPanel(Product product, JPanel panel) {// set sản phẩm vào jpanel
-    JPanel productPanel = new JPanel();
-    productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
+    private void addProductToPanel(Product product, JPanel panel) {
+        JPanel productPanel = new JPanel();
+        productPanel.setLayout(new GridBagLayout()); // Sử dụng GridBagLayout cho việc căn chỉnh linh hoạt
 
-    JLabel productName = new JLabel(product.getIdProductName());
-    JLabel productPrice = new JLabel(String.format("Giá: %.2f", product.getPrice()));
-    JLabel productImage = new JLabel();
-    setProductImage(product.getImage(), productImage);
+          GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(5, 5, 5, 5); // Điều chỉnh khoảng cách giữa các thành phần
 
-    productImage.setPreferredSize(new Dimension(150, 150));//set size ảnh
-    JTextField quantityField = new JTextField("1", 5);
-    quantityField.setMaximumSize(new Dimension(50, 30));
+        // Nhãn hình ảnh sản phẩm
+        JLabel productImage = new JLabel();
+        setProductImage(product.getImage(), productImage);
+        productImage.setPreferredSize(new Dimension(150, 150));
 
-    JButton addButton = new JButton("Thêm");
-    addButton.addActionListener(evt -> addProductToOrder(product.getIdProductName(), productPrice, quantityField));
+        // Nhãn tên sản phẩm
+        JLabel productName = new JLabel(product.getIdProductName(), JLabel.CENTER);
+        productName.setHorizontalAlignment(SwingConstants.CENTER); // Căn giữa
 
-    productPanel.add(productImage);
-    productPanel.add(productName);
-    productPanel.add(productPrice);
-    productPanel.add(quantityField);
-    productPanel.add(addButton);
+        // Nhãn giá sản phẩm
+        JLabel productPrice = new JLabel(String.format("Giá: %.3f", product.getPrice()), JLabel.CENTER);
+        productPrice.setHorizontalAlignment(SwingConstants.CENTER); // Căn giữa
 
-    panel.add(productPanel);
-    panel.revalidate();
-    panel.repaint();
-}
+        // Panel cho việc chọn số lượng
+        JPanel quantityPanel = new JPanel();
+        quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+        JTextField quantityField = new JTextField("1", 5);
+        quantityField.setEditable(false); // Không cho phép chỉnh sửa
+
+        JButton incrementButton = new JButton("+");
+        JButton decrementButton = new JButton("-");
+
+        incrementButton.addActionListener(evt -> {
+            int currentQuantity = Integer.parseInt(quantityField.getText());
+            quantityField.setText(String.valueOf(currentQuantity + 1));
+        });
+
+        decrementButton.addActionListener(evt -> {
+            int currentQuantity = Integer.parseInt(quantityField.getText());
+            if (currentQuantity > 1) {
+                quantityField.setText(String.valueOf(currentQuantity - 1));
+            }
+        });
+
+        quantityPanel.add(decrementButton);
+        quantityPanel.add(quantityField);
+        quantityPanel.add(incrementButton);
+
+        // Nút thêm sản phẩm
+        JButton addButton = new JButton("Thêm");
+        addButton.addActionListener(evt -> addProductToOrder(product.getIdProductName(), productPrice, quantityField));
+
+        // Căn chỉnh các thành phần vào productPanel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        productPanel.add(productImage, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        productPanel.add(productName, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        productPanel.add(productPrice, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        productPanel.add(quantityPanel, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        productPanel.add(addButton, gbc);
+
+        // Thêm productPanel vào panel chính
+        panel.add(productPanel);
+        panel.revalidate(); // Cập nhật lại bố cục
+        panel.repaint();    // Vẽ lại để hiển thị cập nhật
+    }
 
 
     private void setProductImage(String imagePath, JLabel label) {
-        try {
-            URL url = new URL(imagePath);
-            Image image = ImageIO.read(url);
-            Image scaledImage = image.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-            label.setIcon(new ImageIcon(scaledImage));
-        } catch (IOException e) {
-            label.setText("Hình ảnh không có");
+        // Sử dụng phương thức read để lấy ImageIcon
+        ImageIcon icon = XImage.read(imagePath); // gọi phương thức read với tên file
+
+        if (icon != null) {
+            // Nếu có icon, thiết lập vào JLabel
+            label.setIcon(icon);
+        } else {
+            // Nếu không có icon, hiển thị thông báo lỗi
+            label.setText("Hình ảnh không tìm thấy");
         }
     }
 
+    private void setImageIcon(JLabel label, Image image) {
+        Image scaledImage = image.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        label.setIcon(new ImageIcon(scaledImage));
+    }
+    
     private void addProductToOrder(String productName, JLabel priceLabel, JTextField quantityField) {
         String priceText = priceLabel.getText().replace("Giá: ", "").replace(",", ".").trim();
 
@@ -222,9 +252,9 @@ public class Oder extends javax.swing.JFrame {
             double price = Double.parseDouble(priceText);
             int quantity = Integer.parseInt(quantityField.getText());
             if (quantity <= 0) {
-            JOptionPane.showMessageDialog(this, "Số lượng phải là số dương.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+                JOptionPane.showMessageDialog(this, "Số lượng phải là số dương.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             boolean productExists = false;
             for (OrderItem orderItem : orderItems) {
                 if (orderItem.productName.equals(productName)) {
@@ -261,13 +291,7 @@ public class Oder extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Không có món nào để xử lý thanh toán.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         }
     }
-
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -312,11 +336,11 @@ public class Oder extends javax.swing.JFrame {
         jpltra.setLayout(jpltraLayout);
         jpltraLayout.setHorizontalGroup(
             jpltraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 548, Short.MAX_VALUE)
+            .addGap(0, 759, Short.MAX_VALUE)
         );
         jpltraLayout.setVerticalGroup(
             jpltraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 557, Short.MAX_VALUE)
+            .addGap(0, 563, Short.MAX_VALUE)
         );
 
         tblcoffe.addTab("Trà ", jpltra);
@@ -358,11 +382,12 @@ public class Oder extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(tblcoffe, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(565, 565, 565))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(tblcoffe, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
@@ -403,8 +428,8 @@ public class Oder extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tblcoffe)
-                .addGap(3, 3, 3))
+                .addComponent(tblcoffe, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -431,7 +456,6 @@ processPayment();
     private void btnxoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxoaActionPerformed
 int selectedRow = jtblthongtin.getSelectedRow(); // Get the selected row index
     if (selectedRow >= 0) {
-        
         orderItems.remove(selectedRow);
         updateOrderDetails(); 
         JOptionPane.showMessageDialog(this, "Đã xóa sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);     
@@ -443,53 +467,25 @@ int selectedRow = jtblthongtin.getSelectedRow(); // Get the selected row index
     }//GEN-LAST:event_btnxoaActionPerformed
 
     private void btnxoa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxoa1ActionPerformed
-int selectedRow = jtblthongtin.getSelectedRow(); 
-    if (selectedRow >= 0) {
-        OrderItem selectedItem = orderItems.get(selectedRow);
-        if (selectedItem.quantity > 1) {
-          
-            selectedItem.quantity--;
-        } else {
-           
-            orderItems.remove(selectedRow);
-        }
-        updateOrderDetails(); // Refresh the order details
-        JOptionPane.showMessageDialog(this, "Đã xóa 1 sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-    } else {
-        // Show a warning if no row is selected
-        JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để xóa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-    }
+        int selectedRow = jtblthongtin.getSelectedRow(); 
+        if (selectedRow >= 0) {
+            OrderItem selectedItem = orderItems.get(selectedRow);
+            if (selectedItem.quantity > 1) {
 
+                selectedItem.quantity--;
+            } else {
+
+                orderItems.remove(selectedRow);
+            }
+            updateOrderDetails(); // Refresh the order details
+            JOptionPane.showMessageDialog(this, "Đã xóa 1 sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Show a warning if no row is selected
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để xóa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnxoa1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Oder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Oder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Oder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Oder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Oder().setVisible(true);
